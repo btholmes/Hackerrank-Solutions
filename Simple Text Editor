@@ -1,0 +1,79 @@
+import java.io.*;
+import java.util.*;
+
+public class Solution {
+
+   	public static void main(String[] args) throws FileNotFoundException{
+ 
+		Scanner scan = new Scanner(System.in);  
+		StringBuilder current = new StringBuilder();  
+		int queries = scan.nextInt(); 
+		scan.nextLine(); 
+		
+		Stack<op> stack = new Stack<op>(); 
+		
+		for(int i = 0; i < queries; i++){
+			String line = scan.nextLine(); 
+			String[] parts = line.split(" "); 
+			int operation = Integer.parseInt(parts[0]); 
+			op object;  
+			if(operation == 1){
+				String append = parts[1]; 
+				object = new op(operation, append, current.toString()); 
+				stack.push(object);
+				current.append(append); 				 
+			}
+			if(operation == 2){
+				int remove = Integer.parseInt(parts[1]); 
+				object = new op(operation, remove, current.toString()); 
+				stack.push(object);
+				current.delete(current.length() - remove, current.length()); 				 
+			}
+			if(operation == 3){
+				int printMe = Integer.parseInt(parts[1]); 
+				System.out.println(current.substring((printMe-1),printMe));
+			}
+			if(operation == 4){
+				if(!stack.isEmpty()){
+					op previousOp = stack.pop(); 
+//					System.out.println(previousOp.getString());
+					current.delete(0, current.length()); 
+					current.append(previousOp.getString()); 
+				}
+				 
+			}
+			
+		}		
+		scan.close(); 
+	}
+	
+}
+class op{
+	private int type; 
+	private int values; 
+	private String value; 
+	private String stringValue; 
+	
+	public op(int x,  String y, String current){
+		type = x; 
+		value = y; 
+		stringValue = current; 
+	}
+	public op(int x, int y, String current){
+		type = x; 
+		values = y; 
+		stringValue = current; 
+	}
+	public int getType() {
+		return type; 
+	}
+	public int getValues() {
+		return values; 
+	}
+	public String getValue() {
+		return value; 
+	}
+	public String getString() {
+		return stringValue; 
+	}
+}
