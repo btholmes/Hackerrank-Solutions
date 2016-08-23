@@ -1,0 +1,94 @@
+import java.io.*;
+import java.util.*;
+import java.text.*;
+import java.math.*;
+import java.util.regex.*;
+
+public class Solution {
+
+    public static void main(String[] args) throws FileNotFoundException{
+		
+		
+		Scanner in = new Scanner(System.in); 
+		boolean go = false; 
+		int lines = in.nextInt();
+		int iteration = 0; 
+		in.nextLine(); 
+		
+		while(iteration < lines){
+			String sequence = in.nextLine(); 
+			Stack<String> stack = new Stack<String>(); 
+			for(int i = 0; i < sequence.length(); i++){
+				if(sequence.charAt(i) == '}' || sequence.charAt(i) == ']' || sequence.charAt(i) == ')'){
+					if(!go){
+						System.out.println("NO");
+						i = sequence.length(); 
+					}else{
+						if(stack.isEmpty() ){
+							System.out.println("NO");
+							i = sequence.length(); 
+						}
+						else{
+							boolean match = false; 
+							String check = stack.pop(); 
+							if(check.equals("{")){
+								if(sequence.charAt(i) == '}'){
+//								System.out.println("Found one");
+								match = true; 
+//								i++; 
+								}
+							}
+							if(check.equals("[")){
+								if(sequence.charAt(i) == ']'){
+//								System.out.println("Found one");
+								match = true; 
+//								i++;  
+								}
+							}
+							if(check.equals("(")){
+								if(sequence.charAt(i) == ')'){
+//								System.out.println("Found one");
+								match = true; 
+//								i++; 
+								}
+							}
+					
+						if(match == false){
+							System.out.println("NO");
+							i = sequence.length(); 
+//							else{
+//								stack.push(sequence.charAt(i) + ""); 
+//							}
+							
+						}
+						else{
+							if(i == sequence.length()-1){
+								System.out.println("YES");
+							}
+						}
+						}
+				
+					}		
+					
+				}else{
+					if(i == sequence.length() -1){
+						System.out.println("NO");
+						go = false; 
+					}
+					else{
+						stack.push(sequence.charAt(i) + "");	
+						go = true; 
+					}
+					
+				}
+				
+			}
+			iteration++; 
+//			System.out.println();
+		}
+		in.close(); 
+		
+	
+	 
+}
+}
