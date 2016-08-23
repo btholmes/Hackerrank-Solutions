@@ -1,0 +1,228 @@
+import java.io.*;
+import java.util.*;
+import java.text.*;
+import java.math.*;
+import java.util.regex.*;
+
+/** Class TreapNode **/
+
+public class Solution {
+
+    		public static void main(String[] args) throws FileNotFoundException {
+			
+//			Random rand1 = new Random(); 
+//			System.out.println(rand1.nextInt());
+			//File input = new File("C:\\Users\\Nick & Paige\\Desktop\\input.txt"); 
+			Scanner in = new Scanner(System.in);
+			int n = in.nextInt(); 
+			int m = in.nextInt(); 
+            in.nextLine(); 
+            String[] array = in.nextLine().split(" "); 
+	        Treap treap = new Treap(); 
+            
+            for(int i = 0; i < n; i++)
+            {
+                treap.insert(0, Integer.parseInt(array[n-1-i]));     
+            }
+			//System.out.println("Original treap " + treap.toString()); 
+            for(int i = 0; i < m; i++)
+            {
+                int Query = in.nextInt(); 
+                int start = in.nextInt(); 
+                int end = in.nextInt(); 
+                 
+                if(Query == 1)
+                {
+                    Treap beginning = treap.split(start-1);
+                    Treap range = treap.split(end-start + 1);
+                    Treap back = treap; 
+                    treap = range.merge(beginning); 
+                    treap.merge(back); 
+                
+                }
+                else 
+                {
+                   Treap beginning = treap.split(start-1);
+                   Treap range = treap.split(end - start + 1);
+                   Treap back = treap;
+                   treap = beginning.merge(back); 
+                   treap.merge(range); 
+                    
+                }
+                
+            }
+            
+			Treap first = treap.split(1);
+			Treap allButLast = treap.split(n-2); 
+            Treap last = treap; 
+			System.out.println(Math.abs(first.root.val - last.root.val));
+                
+			System.out.println(first.merge(allButLast).merge(last).toString());
+		}
+
+static class Treap {
+
+		Node root;
+		Node rootRev;
+ 
+		Node splitL, splitR; // å®�æ�°å��é«�é��å��
+		Random rand = new Random(); 
+		
+		Treap(){
+			this(null, null);
+		}
+ 
+		Treap(Node root, Node rootRev){
+			this.root=root;
+			this.rootRev=rootRev;
+		}
+ 
+		int size(){
+			return size(root);
+		}
+ 
+		Node update(Node n){
+			n.size=size(n.left)+size(n.right)+1;
+			return n;
+		}
+ 
+		int size(Node n){
+			return n==null?0:n.size;
+		}
+ 
+ 
+		// [0, k), [k, k+1), [k+1,n)
+		Node erase(Node n, int k){
+			split(n, k+1);
+			// Node left=splitL;
+			Node right=splitR;
+			split(splitL, k);
+			return merge(splitL, right);
+		}
+ 
+		/** this + t */
+		Treap merge(Treap t){
+			root=merge(root, t.root);
+			rootRev=merge(t.rootRev, rootRev);
+			return this;
+		}
+		Node merge(Node l, Node r){
+			if(l==null)
+				return r;
+			if(r==null)
+				return l;
+ 
+			if(l.p>r.p){
+				l.right=merge(l.right, r);
+				return update(l);
+			}else{
+				r.left=merge(l, r.left);
+				return update(r);
+			}
+		}
+ 
+		/**
+		 * [0, k), [k, n)
+		 * @return [0, k)
+		 */
+		Treap split(int k){
+			split(root, k);
+			root=splitR;
+			Node root2=splitL;
+ 
+			split(rootRev, size(rootRev)-k);
+			rootRev=splitL;
+			Node rootRev2=splitR;
+			return new Treap(root2, rootRev2);
+		}
+		
+		void split(Node n, int k){
+			if(n==null){
+				splitL=splitR=null;
+			}else if(k<=size(n.left)){
+				split(n.left, k);
+				n.left=splitR;
+				splitR=update(n);
+			}else{
+				split(n.right, k-size(n.left)-1);
+				n.right=splitL;
+				splitL=update(n);
+			}
+		}
+ 
+		// [0, k), [k, k+1), [k+1â�¦
+		Treap insert(int k, int val){
+			int p = rand.nextInt();
+			root=insert(root, k, val, p);
+			rootRev=insert(rootRev, size(rootRev)-k, val, p);
+			return this;
+		}
+ 
+		Node insert(Node n, int k, int val, int p){
+			split(n, k);
+			return merge(merge(splitL, new Node(val, p)), splitR);
+		}
+		
+		Treap erase(int k){
+			root=erase(root, k);
+			rootRev=erase(rootRev, size(rootRev)-k);
+			return this;
+		}
+ 
+		Treap reverse(int s, int t){
+			split(root, t);
+			// Node p2L=splitL;
+			Node p2R=splitR;
+			split(splitL, s);
+			Node p1L=splitL, p1R=splitR;
+			// p1L, p1R, p2R
+			// [0, s), [s, t), [t, n)
+ 
+			int size=size(rootRev);
+			split(rootRev, size-s);
+			// Node q2L=splitL;
+			Node q2R=splitR;
+			split(splitL, size-t);
+			Node q1L=splitL, q1R=splitR;
+			// q1L, q1R, q2R
+			// [0,n-t), [n-t,n-s), [n-s,n)
+ 
+			root=merge(merge(p1L, q1R), p2R);
+			rootRev=merge(merge(q1L, p1R), q2R);
+ 
+			return this;
+		}
+ 
+		public String toString(){
+			StringBuilder sb=new StringBuilder();
+			toString(root, sb);
+			return sb.toString().trim();
+		}
+ 
+		void toString(Node t, StringBuilder sb){
+			if(t==null){
+				sb.append(' ');
+			}else{
+				toString(t.left, sb);
+				sb.append(t.val);
+				toString(t.right, sb);
+			}
+		}
+		
+		class Node{
+			int val;
+			Node left, right;
+			int p;
+			int size;
+	 
+			Node(int val, int p){
+				this.val=val;
+				this.p=p;
+				size=1;
+			}
+		}
+
+
+    
+}
+}
