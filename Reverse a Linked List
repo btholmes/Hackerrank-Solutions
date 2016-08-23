@@ -1,0 +1,36 @@
+/*
+  Reverse a linked list and return pointer to the head
+  The input list will have at least one element  
+  Node is defined as  
+  class Node {
+     int data;
+     Node next;
+  }
+*/
+    // This is a "method-only" submission. 
+    // You only need to complete this method. 
+Node Reverse(Node head) {
+    if(head == null)
+    {
+        return head; 
+    }
+    Stack<Node> stack = new Stack<Node>(); 
+    Node current = head; 
+    while(current != null)
+    {
+        stack.push(current); 
+        current = current.next; 
+    }
+    Node newHead = new Node(); 
+    newHead.data = stack.pop().data;
+    Node place = newHead; 
+    while(!stack.isEmpty())
+    {       
+        Node nextNode = new Node(); 
+        nextNode.data = stack.pop().data; 
+        place.next = nextNode; 
+        place = place.next; 
+        
+    }
+    return newHead; 
+}
