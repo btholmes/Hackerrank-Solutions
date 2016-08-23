@@ -1,0 +1,36 @@
+/*
+   class Node 
+       int data;
+       Node left;
+       Node right;
+*/
+void top_view(Node root)
+{
+    Node leftLook = root; 
+    int main = root.data; 
+    ArrayList<Integer> left = new ArrayList<Integer>(); 
+    ArrayList<Integer> right = new ArrayList<Integer>();     
+    
+    while(leftLook.left != null) 
+    {
+        left.add(leftLook.left.data);
+        leftLook = leftLook.left; 
+        
+    }
+    while(root.right != null) 
+    {
+        right.add(root.right.data); 
+        root = root.right; 
+    }
+    
+    for(int j = left.size()-1; j >= 0; j--)
+    {
+        System.out.print(left.get(j) + " "); 
+    }
+    System.out.print(main + " ");
+    for(int i = 0; i < right.size(); i++)
+    {
+        System.out.print(right.get(i) + " "); 
+    }
+    
+}
