@@ -1,0 +1,63 @@
+import java.io.*;
+import java.util.*;
+
+public class Solution {
+
+    public static void main(String[] args) {
+        /* Enter your code here. Read input from STDIN. Print output to STDOUT. Your class should be named Solution. */
+        
+    Map<Integer, ArrayList<Integer>> map = new HashMap<Integer, ArrayList<Integer>>(); 
+        Scanner in = new Scanner(System.in); 
+        int N = in.nextInt(); 
+        int Q = in.nextInt(); 
+        int LastAnswer = 0; 
+        ArrayList<Integer> list = new ArrayList<Integer>(); 
+
+        for(int l = 0; l < N; l++)
+        {
+            map.put(l, new ArrayList<Integer>()); 
+        }
+        
+        int Sequence = 0; 
+        
+        while(in.hasNextInt())
+        {
+            int One = in.nextInt(); 
+            int X = in.nextInt(); 
+            int Y = in.nextInt(); 
+           
+            int Exor = X^LastAnswer; 
+
+            
+          //  if(((X == 0)&&(LastAnswer >= 1) || (X >= 1)&(LastAnswer == 0))) Exor = 1; 
+            
+            Sequence = Exor % N; 
+            
+            //Type One Query
+            if(One == 1)
+            {
+                map.get(Sequence).add(Y); 
+            }
+            //Type Two Query
+            else
+            {
+                int element = 0; 
+                element = (map.get(Sequence).size()) > 0 ? Y % (map.get(Sequence).size()) : 0; 
+                
+              //  System.out.println("The element position in list is: " + element);
+                LastAnswer = map.get(Sequence).get(element);  
+
+                //Error Checking 
+                System.out.println(LastAnswer); 
+                
+               
+            }        
+            
+        }
+        
+//               System.out.println(map.get(0)); 
+//               System.out.println(map.get(1)); 
+
+        
+    }   
+}
