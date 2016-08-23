@@ -1,0 +1,121 @@
+   /* Class node is defined as :
+    class Node 
+       int val;   //Value
+       int ht;      //Height
+       Node left;   //Left child
+       Node right;   //Right child
+
+   */
+
+static Node insert(Node root,int val)
+{ 
+ //   System.out.println("Height of root.left is " + FindHeight(root.left)); 
+       if(root == null)
+       {
+           Node newNode = new Node();
+           newNode.val = val; 
+           root = newNode; 
+       }
+       
+       if(val < root.val)
+       {
+           if(root.left != null)
+           {    
+           root.left = insert(root.left, val); 
+           }
+           else
+           {
+               Node newNode = new Node();
+               newNode.val = val; 
+               root.left = newNode; 
+               //newNode.ht = 1; 
+           }
+       }
+       if(val > root.val)
+       {
+           if(root.right != null)
+           {
+           root.right = insert(root.right, val); 
+           }
+           else
+           {
+               Node newNode = new Node();
+               newNode.val = val; 
+               root.right = newNode; 
+               //newNode.ht = 1; 
+           }
+       }
+
+      root.ht =  Math.max(FindHeight(root.left), FindHeight(root.right)) + 1;
+
+       int balanceFactor = FindBalanceFactor(root); 
+   //     System.out.println("The balance factor of the root after insert is: " + FindBalanceFactor(root)); 
+
+       return ShiftTree(root); 
+}
+
+
+static int FindBalanceFactor(Node root)
+{
+       if(root == null)
+           return 0;
+       
+      return FindHeight(root.left) - FindHeight(root.right);  
+}
+
+static int FindHeight(Node aNode)
+{
+    if(aNode == null)
+        return -1;
+    
+        return aNode.ht; 
+  
+}
+       
+static Node ShiftTree(Node root) 
+{
+  int bf = FindBalanceFactor(root);
+  if (root == null || Math.abs(bf) <= 1) {
+    return root;
+  }
+
+  if (bf > 0) {
+    if (FindBalanceFactor(root.left) < 0) {
+      root.left = RotateLeft(root.left);
+    }
+    return RotateRight(root);
+  } else {
+    if (FindBalanceFactor(root.right) > 0) {
+      root.right = RotateRight(root.right);
+    }
+    return RotateLeft(root);
+  }
+}
+
+static Node RotateLeft(Node root)
+{
+  Node original = root;
+  root = original.right;
+  original.right = root.left;
+  root.left = original;
+
+  original.ht = Math.max(FindHeight(original.left), FindHeight(original.right)) + 1;
+  root.ht =  Math.max(FindHeight(root.left), FindHeight(root.right)) + 1;
+
+  return root;
+}
+
+static Node RotateRight(Node root)
+{
+  Node original = root;
+  root = original.left;
+  original.left = root.right;
+  root.right = original;
+
+  original.ht = Math.max(FindHeight(original.left), FindHeight(original.right)) + 1;
+  root.ht =  Math.max(FindHeight(root.left), FindHeight(root.right)) + 1;
+  return root;
+}
+
+
+  
