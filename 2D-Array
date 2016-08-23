@@ -1,0 +1,39 @@
+import java.io.*;
+import java.util.*;
+
+public class Solution {
+
+    public static void main(String[] args) {
+        /* Enter your code here. Read input from STDIN. Print output to STDOUT. Your class should be named Solution. */
+        int max = -100000; 
+        Scanner in = new Scanner(System.in); 
+        int[][] array = new int[6][6]; 
+        int hours = 0; 
+        
+                 
+        for(int i = 0; i < 6; i++ )
+        {
+            for(int j = 0; j < 6; j++) 
+            {
+                array[i][j] = in.nextInt(); 
+             //   System.out.print(array[i][j]); 
+            }      
+          //  System.out.println(); 
+        }
+        
+        for(int k = 0; k < 4; k++)
+        {
+             for(int j = 0; j < 4; j++)
+            {
+               hours = array[k][j] + array[k][j+1] + array[k][j+2] + array[k+1][j+1]+ array[k+2][j] + array[k+2][j+1] + array[k+2][j+2]; 
+           //      System.out.println(hours); 
+                        
+            if(hours > max) max = hours;    
+                 
+            }             
+        }
+        in.close(); 
+        System.out.println(max); 
+        
+    }
+}
