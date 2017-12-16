@@ -1,1 +1,1 @@
-I am a git update script
+You are a git update script
